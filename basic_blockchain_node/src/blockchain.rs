@@ -1,6 +1,5 @@
 use crate::block::Block;
 use crate::transaction::Transaction;
-
 pub struct Blockchain {
     pub chain: Vec<Block>,
 }
@@ -13,11 +12,11 @@ impl Blockchain {
         }
     }
 
-    pub fn add_block(&mut self, transactions: Vec<Transaction>) {
+    pub fn add_block(&mut self, data: String) {
         let previous_block = self.chain.last().unwrap();
         let new_block = Block::new(
             previous_block.index + 1,
-            transactions,
+            data,
             previous_block.hash.clone(),
         );
         self.chain.push(new_block);

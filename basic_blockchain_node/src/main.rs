@@ -7,21 +7,16 @@ use blockchain::Blockchain;
 use transaction::Transaction;
 use network::Network;
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() {
     let mut blockchain = Blockchain::new();
-    let mut network = Network::new().await?;
+    
+    blockchain.add_block(String::from("First Block"));
+    blockchain.add_block(String::from("Second Block"));
+    blockchain.add_block(String::from("Third Block"));
 
-    let transaction = Transaction::new(
-        
-        "Alice".to_string(),
-        "Bob".to_string(),
-        100,
-    );
+    for block in blockchain.chain.iter() {
+        println!("{:?}", block);
+    }
 
-    blockchain.add_block(vec![transaction]);
-
-    network.run().await;
-
-    Ok(())
+    println!("Blockchain is valid: {}", blockchain.is_valid());
 }
