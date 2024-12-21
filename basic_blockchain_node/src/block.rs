@@ -7,7 +7,6 @@ use crate::transaction::Transaction;
 pub struct Block {
     pub index: u32,
     pub timestamp: i64,
-    pub data: String,
     pub previous_hash: String,
     pub hash: String,
     pub nonce: u64,
@@ -17,12 +16,11 @@ pub struct Block {
 impl Block {
     pub fn new(index: u32, transactions: Vec<Transaction>, previous_hash: String) -> Self {
         let timestamp = Utc::now().timestamp();
-        let (nonce, hash) = mine_block(index, timestamp, &data, &previous_hash);
+        let (nonce, hash) = mine_block(index, timestamp, &transactions, &previous_hash);
         
         Block {
             index,
             timestamp,
-            data,
             previous_hash,
             hash,
             nonce,
@@ -31,10 +29,10 @@ impl Block {
     }
 }
 
-fn mine_block(index: u32, timestamp: i64, data: &str, previous_hash: &str) -> (u64, String) {
+fn mine_block(index: u32, timestamp: i64, transactions: &[Transaction], previous_hash: &str) -> (u64, String) {
     let mut nonce = 0;
     loop {
-        let hash = calculate_hash(index, timestamp, data, previous_hash, nonce);
+        let hash = calculate_hash(index, timestamp, transactions, previous_hash, nonce);
         if hash.starts_with("0000") {
             return (nonce, hash);
         }
@@ -42,8 +40,9 @@ fn mine_block(index: u32, timestamp: i64, data: &str, previous_hash: &str) -> (u
     }
 }
 
-fn calculate_hash(index: u32, timestamp: i64, data: &str, previous_hash: &str, nonce: u64) -> String {
-    let input = format!("{}{}{}{}{}", index, timestamp, data, previous_hash, nonce);
+fn calculate_hash(index: u32, timestamp: i64, transactions: &[Transaction], previous_hash: &str, nonce: u64) -> String {
+    let transactions_str = serde_json::to_string(transactions).unwrap_or_default();
+    let input = format!("{}{}{}{}{}", index, timestamp, transactions_str, previous_hash, nonce);
     let mut hasher = Sha256::new();
     hasher.update(input);
     format!("{:x}", hasher.finalize())

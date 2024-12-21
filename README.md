@@ -92,3 +92,8 @@ Citations:
 [9] https://www.skeps.com/blog/deploying-blockchain-applications-with-docker
 [10] https://webisoft.com/articles/rust-blockchain/
 [11] https://www.youtube.com/watch?v=1oJrLNKSVf8
+
+
+#### manual build
+cargo build
+cargo run

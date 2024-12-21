@@ -7,7 +7,9 @@ pub struct Blockchain {
 
 impl Blockchain {
     pub fn new() -> Self {
-        let genesis_block = Block::new(0, String::from("Genesis Block"), String::from("0"));
+        //let genesis_block = Block::new(0, String::from("Genesis Block"), String::from("0"));
+        let genesis_block = Block::new(0, Vec::new(), String::from("0"));
+
         Blockchain {
             chain: vec![genesis_block],
         }
